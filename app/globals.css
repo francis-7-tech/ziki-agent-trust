@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+/* Ziki's light theme tokens, copied from Zedu-Endor/issue-tracker app/globals.css. */
+:root {
+  --zk-bg: #f5f7fc;
+  --zk-surface: #ffffff;
+  --zk-text: #15121f;
+  --zk-text2: #3e4a63;
+  --zk-muted: #5f6577;
+  --zk-border: #e3e8f2;
+  --zk-divider: #eef1f7;
+  --zk-tint: #eaf2fe;
+  --zk-chip: #f0f2f7;
+  --zk-seg: #eef1f6;
+  --zk-accent: #1f5fd9;
+  --zk-ok-bg: #e3f6ec;
+  --zk-ok-fg: #146c43;
+  --zk-bad-bg: #fde8e4;
+  --zk-bad-fg: #a3261a;
+  --zk-bad-bd: #f4b3a8;
+  --zk-bad-soft: #fff4f2;
+  --zk-warn-bg: #fdf3d7;
+  --zk-warn-fg: #7a4e00;
+  --zk-warn-bd: #f0cd72;
+  --zk-info-bg: #e7f0ff;
+  --zk-info-fg: #1d4fb8;
+}
+
+@theme inline {
+  --color-zk-bg: var(--zk-bg);
+  --color-zk-surface: var(--zk-surface);
+  --color-zk-text: var(--zk-text);
+  --color-zk-text2: var(--zk-text2);
+  --color-zk-muted: var(--zk-muted);
+  --color-zk-border: var(--zk-border);
+  --color-zk-divider: var(--zk-divider);
+  --color-zk-tint: var(--zk-tint);
+  --color-zk-chip: var(--zk-chip);
+  --color-zk-seg: var(--zk-seg);
+  --color-zk-accent: var(--zk-accent);
+  --color-zk-ok-bg: var(--zk-ok-bg);
+  --color-zk-ok-fg: var(--zk-ok-fg);
+  --color-zk-bad-bg: var(--zk-bad-bg);
+  --color-zk-bad-fg: var(--zk-bad-fg);
+  --color-zk-bad-bd: var(--zk-bad-bd);
+  --color-zk-bad-soft: var(--zk-bad-soft);
+  --color-zk-warn-bg: var(--zk-warn-bg);
+  --color-zk-warn-fg: var(--zk-warn-fg);
+  --color-zk-warn-bd: var(--zk-warn-bd);
+  --color-zk-info-bg: var(--zk-info-bg);
+  --color-zk-info-fg: var(--zk-info-fg);
+  --color-blue-slate: #263b63;
+  --color-electric-blue: #3978f6;
+  --color-electric-blue-strong: #2e6fef;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background: var(--zk-bg);
+  color: var(--zk-text);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Movement only: content is visible from the first frame, so nothing can be caught invisible. */
+@keyframes zk-rise {
+  from {
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.zk-rise {
+  animation: zk-rise 220ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zk-rise {
+    animation: none;
+  }
+}

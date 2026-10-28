@@ -19,6 +19,9 @@ import { useTrust } from "./trust-store";
 export function ProposedAgents() {
   const { asks, askState, openAsks, ready } = useTrust();
   const answered = asks.filter((a) => askState[a.id]?.status === "answered").reverse();
+  const [openId, setOpenId] = useState<string | null>(null);
+  // One request open at a time: the one you picked, or the first waiting.
+  const focusId = openAsks.some((a) => a.id === openId) ? openId : openAsks[0]?.id;
 
   return (
     <div className="space-y-8">
@@ -29,6 +32,22 @@ export function ProposedAgents() {
         </p>
       </div>
 
+      <div className="grid gap-3 sm:grid-cols-2" aria-label="What changed">
+        <div className={`${surface} p-4`}>
+          <p className="text-xs font-bold uppercase tracking-[0.06em] text-zk-muted">Before</p>
+          <div className="mt-2 flex items-center gap-2">
+            <span className="rounded-xl border border-zk-border px-3 py-1.5 text-sm text-zk-text">Reviewer ▾</span>
+            <span className="text-sm text-zk-text2">You pick a level. Ziki also promotes and demotes on its own, silently.</span>
+          </div>
+        </div>
+        <div className={`${surface} border-electric-blue p-4`}>
+          <p className="text-xs font-bold uppercase tracking-[0.06em] text-zk-accent">Now</p>
+          <p className="mt-2 text-sm text-zk-text">
+            <b>The agent asks you</b>, with its record. You answer: yes, only some areas, try 24 hours, or not yet.
+          </p>
+        </div>
+      </div>
+
       <section aria-labelledby="waiting-heading" className="space-y-3">
         <h2 id="waiting-heading" className={sectionTitle}>
           Waiting on you{ready && openAsks.length ? ` · ${openAsks.length}` : ""}
@@ -37,9 +56,25 @@ export function ProposedAgents() {
           <p className={`${surface} p-5 text-sm text-zk-muted`}>Nothing is waiting on you. Your agents will ask when they&apos;re ready for more.</p>
         ) : (
           <div className="space-y-3">
-            {openAsks.map((ask) => (
-              <AskCard key={ask.id} ask={ask} />
-            ))}
+            {openAsks.map((ask) => {
+              if (ask.id === focusId) return <AskCard key={ask.id} ask={ask} />;
+              const agent = AGENTS.find((a) => a.id === ask.agentId)!;
+              return (
+                <button
+                  key={ask.id}
+                  type="button"
+                  onClick={() => setOpenId(ask.id)}
+                  className={`${surface} flex w-full items-center gap-3 p-3.5 text-left hover:border-electric-blue`}
+                >
+                  <Avatar id={agent.id} name={agent.name} size="sm" />
+                  <span className="min-w-0 flex-1 truncate text-sm text-zk-text2">
+                    <b className="text-zk-text">{agent.name}</b>{" "}
+                    {ask.kind === "checkin" ? "is checking in about its claims" : `asks to become ${AGENT_LEVEL_LABELS[ask.to]}`}
+                  </span>
+                  <span className="text-sm font-bold text-zk-accent">Open</span>
+                </button>
+              );
+            })}
           </div>
         )}
         {ready && answered.length > 0 ? (

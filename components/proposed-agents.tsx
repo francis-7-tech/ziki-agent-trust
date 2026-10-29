@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { AGENTS, type Agent } from "@/lib/data";
+import { AGENTS, ASKS, type Agent } from "@/lib/data";
 import {
   AGENT_LEVELS,
   AGENT_LEVEL_DESCRIPTIONS,
@@ -20,8 +20,9 @@ export function ProposedAgents() {
   const { asks, askState, openAsks, ready } = useTrust();
   const answered = asks.filter((a) => askState[a.id]?.status === "answered").reverse();
   const [openId, setOpenId] = useState<string | null>(null);
-  // One request open at a time: the one you picked, or the first waiting.
-  const focusId = openAsks.some((a) => a.id === openId) ? openId : openAsks[0]?.id;
+  // One request open at a time: the one you picked, else the newest request your answers created, else the first waiting.
+  const created = openAsks.filter((a) => !ASKS.some((s) => s.id === a.id));
+  const focusId = openAsks.some((a) => a.id === openId) ? openId : (created[created.length - 1]?.id ?? openAsks[0]?.id);
 
   return (
     <div className="space-y-8">
